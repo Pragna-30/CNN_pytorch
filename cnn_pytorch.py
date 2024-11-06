@@ -59,16 +59,17 @@ for epoch in range(num_epochs):
     print(f'Epoch-{epoch+1/num_epochs},loss:{running_loss/len(train_loader)}')
 
 model.eval()
-correct=0.0
-total=0.0
 with torch.no_grad():
-    for img,label in test_loader:
-        output=model(img)
+    correct=0.0
+    total=0.0
+    for image,label in test_loader:
+        output=model(image)
         loss=criterian(output,label)
         _,predicted=torch.max(output,1)
+        correct += (predicted==label).sum().item()
         total+=label.size(0)
         running_loss+=loss.item()
-    print(f'epoch[{epoch+1/num_epochs}],loss:{running_loss/len(train_loader)}')
+    print(f'epoch[{epoch+1/num_epochs}],loss:{running_loss/len(test_loader)}')
     print(f'accuracy:{correct/total*100}')
 
 plt.plot(loss)
